@@ -1,7 +1,7 @@
 import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { Expose } from 'class-transformer';
 import { BaseEntity } from '../common/entities/base.entity';
-import { formatPhoneNumber } from '../common/utils/phone-number';
+import { formatPhoneNumber, PhoneNumberFormat } from '../common/utils/phone-number';
 import { GpsPoint, gpsPointFromString, gpsPointToString } from '../common/types/gps-point.type';
 import { Requirement } from '../requirements/requirement.entity';
 
@@ -34,8 +34,8 @@ export class Recipient extends BaseEntity {
     charset: 'utf8mb4',
     nullable: true,
     transformer: {
-      from: v => v,
-      to: formatPhoneNumber,
+      from: (v: string): string => formatPhoneNumber(v),
+      to: (v: string): string => formatPhoneNumber(v, PhoneNumberFormat.E164),
     },
   })
   @Index({ unique: true })
