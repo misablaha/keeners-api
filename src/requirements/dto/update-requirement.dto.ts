@@ -20,11 +20,12 @@ export class UpdateRequirementDto {
   demandIds: string[];
 
   @IsString()
-  @Optional()
+  @IsOptional()
   note?: string;
 
   @IsDate()
-  @Optional()
+  @Type(() => Date)
+  @IsOptional()
   supplyDate?: Date;
 
   @IsUUID('4')
@@ -32,10 +33,10 @@ export class UpdateRequirementDto {
   supervisorId: string;
 
   @IsUUID('4')
-  @Optional()
+  @IsOptional()
   helperId?: string;
 
   @IsEnum(RequirementStatus)
-  @Optional()
+  @IsOptional()
   status?: RequirementStatus;
 }

@@ -5,6 +5,7 @@ import { Recipient } from '../recipients/recipient.entity';
 import { Helper } from '../helpers/helper.entity';
 import { GpsPoint, gpsPointFromString, gpsPointToString } from '../common/types/gps-point.type';
 import { Supervisor } from '../supervisors/supervisor.entity';
+import { Expose } from 'class-transformer';
 
 export enum RequirementStatus {
   OPEN = 'open',
@@ -20,6 +21,11 @@ export class Requirement extends BaseEntity {
     recipient => recipient.requirements,
   )
   recipient: Recipient;
+
+  @Expose()
+  get recipientId() {
+    return this.recipient?.id;
+  }
 
   @Column({ charset: 'utf8mb4', nullable: true })
   address: string;
@@ -38,6 +44,11 @@ export class Requirement extends BaseEntity {
   @JoinTable()
   demands: Service[];
 
+  @Expose()
+  get demandIds() {
+    return this.demands.map(d => d.id);
+  }
+
   @Column({ type: 'text', charset: 'utf8mb4', nullable: true })
   note: string;
 
@@ -47,12 +58,22 @@ export class Requirement extends BaseEntity {
   @ManyToOne(() => Supervisor, { nullable: true })
   supervisor: Supervisor;
 
+  @Expose()
+  get supervisorId() {
+    return this.supervisor?.id;
+  }
+
   @ManyToOne(
     () => Helper,
     helper => helper.requirements,
     { nullable: true },
   )
-  helper: Helper;
+  helper?: Helper;
+
+  @Expose()
+  get helperId() {
+    return this.helper?.id;
+  }
 
   @Column({
     type: 'enum',

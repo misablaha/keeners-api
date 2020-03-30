@@ -8,9 +8,11 @@ import { Service } from '../services/service.entity';
 import { Recipient } from '../recipients/recipient.entity';
 import { Supervisor } from '../supervisors/supervisor.entity';
 import { Helper } from '../helpers/helper.entity';
+import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+import { CrudRequest } from '@nestjsx/crud';
 
 @Injectable()
-export class RequirementsService {
+export class RequirementsService extends TypeOrmCrudService<Requirement> {
   constructor(
     @InjectRepository(Helper)
     private readonly helperRepository: Repository<Helper>,
@@ -22,75 +24,23 @@ export class RequirementsService {
     private readonly serviceRepository: Repository<Service>,
     @InjectRepository(Supervisor)
     private readonly supervisorRepository: Repository<Supervisor>,
-  ) {}
-
-  async create(data: CreateRequirementDto): Promise<Requirement> {
-    const entity = new Requirement();
-    entity.recipient = await this.recipientRepository.findOneOrFail(data.recipientId);
-    entity.address = data.address || entity.recipient.address;
-    entity.location = data.location || entity.recipient.location;
-    entity.demands = await this.serviceRepository.findByIds(data.demandIds);
-    if (typeof data.note === 'string') {
-      entity.note = data.note;
-    }
-    if (data.supplyDate) {
-      entity.supplyDate = data.supplyDate;
-    }
-    entity.supervisor = await this.supervisorRepository.findOneOrFail(data.supervisorId);
-    if (data.helperId) {
-      entity.helper = await this.helperRepository.findOneOrFail(data.helperId);
-    }
-    if (data.status) {
-      entity.status = data.status;
-    }
-
-    return this.requirementRepository.save(entity);
+  ) {
+    super(requirementRepository);
   }
 
-  async findAll(): Promise<Requirement[]> {
-    return this.requirementRepository.find({
-      relations: ['demands', 'helper', 'recipient', 'supervisor'],
-    });
+  async createOne(req: CrudRequest, dto: CreateRequirementDto): Promise<Requirement> {
+    const recipient = await this.recipientRepository.findOneOrFail(dto.recipientId);
+    const demands = await this.serviceRepository.findByIds(dto.demandIds);
+    const supervisor = await this.supervisorRepository.findOneOrFail(dto.supervisorId);
+    const helper = 'helperId' in dto ? await this.helperRepository.findOneOrFail(dto.helperId) : undefined;
+    return super.createOne(req, { ...dto, recipient, demands, supervisor, helper });
   }
 
-  findOne(id: string): Promise<Requirement> {
-    return this.requirementRepository.findOneOrFail(id, {
-      relations: ['demands', 'helper', 'recipient', 'supervisor'],
-    });
-  }
-
-  async updateOne(id: string, data: UpdateRequirementDto): Promise<Requirement> {
-    const entity = await this.requirementRepository.findOneOrFail(id);
-
-    if (data.address) {
-      entity.address = data.address;
-    }
-    if (data.location) {
-      entity.location = data.location;
-    }
-    if (data.demandIds) {
-      entity.demands = await this.serviceRepository.findByIds(data.demandIds);
-    }
-    if (data.note) {
-      entity.note = data.note;
-    }
-    if (data.supplyDate) {
-      entity.supplyDate = data.supplyDate;
-    }
-    if (data.supervisorId) {
-      entity.supervisor = await this.supervisorRepository.findOneOrFail(data.supervisorId);
-    }
-    if (data.helperId) {
-      entity.helper = await this.helperRepository.findOneOrFail(data.helperId);
-    }
-    if (data.status) {
-      entity.status = data.status;
-    }
-
-    return this.requirementRepository.save(entity);
-  }
-
-  async remove(id: string): Promise<void> {
-    await this.requirementRepository.delete(id);
+  async updateOne(req: CrudRequest, dto: UpdateRequirementDto): Promise<Requirement> {
+    const demands = 'demandIds' in dto ? await this.serviceRepository.findByIds(dto.demandIds) : undefined;
+    const supervisor =
+      'supervisorId' in dto ? await this.supervisorRepository.findOneOrFail(dto.supervisorId) : undefined;
+    const helper = 'helperId' in dto ? await this.helperRepository.findOneOrFail(dto.helperId) : undefined;
+    return super.updateOne(req, { ...dto, demands, supervisor, helper });
   }
 }
