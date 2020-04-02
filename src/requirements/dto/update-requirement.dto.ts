@@ -1,13 +1,17 @@
-import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-import { Optional } from '@nestjs/common';
-import { GpsPoint } from '../../common/types/gps-point.type';
+import { IsDate, IsEnum, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+import { GpsPoint } from '../../common/types/gps-point.type';
 import { RequirementStatus } from '../requirement.entity';
+import { UpdateRecipientDto } from '../../recipients/dto/update-recipient.dto';
 
 export class UpdateRequirementDto {
+  @ValidateNested()
+  @Type(() => UpdateRecipientDto)
+  @IsOptional()
+  recipient?: UpdateRecipientDto;
+
   @IsString()
-  @IsNotEmpty()
-  @Optional()
+  @IsOptional()
   address?: string;
 
   @ValidateNested()

@@ -2,10 +2,16 @@ import { IsDate, IsEnum, IsOptional, IsString, IsUUID, ValidateNested } from 'cl
 import { Type } from 'class-transformer';
 import { GpsPoint } from '../../common/types/gps-point.type';
 import { RequirementStatus } from '../requirement.entity';
+import { CreateRecipientDto } from '../../recipients/dto/create-recipient.dto';
 
 export class CreateRequirementDto {
   @IsUUID('4')
-  recipientId: string;
+  @IsOptional()
+  recipientId?: string;
+
+  @ValidateNested()
+  @Type(() => CreateRecipientDto)
+  recipient: CreateRecipientDto;
 
   @IsString()
   @IsOptional()
