@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { CreateRequirementDto } from './dto/create-requirement.dto';
 import { Requirement } from './requirement.entity';
 import { RequirementsService } from './requirements.service';

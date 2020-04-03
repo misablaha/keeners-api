@@ -19,6 +19,4 @@ export const gpsPointFromString = (loc?: string): GpsPoint | undefined => {
   return point;
 };
 
-export const gpsPointToString = (point?: GpsPoint): string | undefined => (
-  point && `${point.lat},${point.lng}`
-);
+export const gpsPointToString = (point?: GpsPoint): string | undefined => point && `${point.lat},${point.lng}`;

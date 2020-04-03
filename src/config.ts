@@ -2,14 +2,14 @@ import { parse } from 'url';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export interface Config {
-  port: number,
+  port: number;
   mysql: TypeOrmModuleOptions;
 }
 
 const dbUrl = process.env.MYSQL || 'mysql://root:password@localhost:3306/keeners';
 
 export default (): Config => ({
-  port: process.env.PORT && parseInt(process.env.PORT, 10) || 3000,
+  port: (process.env.PORT && parseInt(process.env.PORT, 10)) || 3001,
   mysql: {
     type: 'mysql',
     url: dbUrl,
