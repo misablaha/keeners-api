@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { Crud } from '@nestjsx/crud';
+import { Crud, CrudController } from '@nestjsx/crud';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { Service } from './service.entity';
 import { ServicesService } from './services.service';
@@ -20,6 +20,6 @@ import { UpdateServiceDto } from './dto/update-service.dto';
     },
   },
 })
-export class ServicesController {
-  constructor(private readonly service: ServicesService) {}
+export class ServicesController implements CrudController<Service> {
+  constructor(public readonly service: ServicesService) {}
 }

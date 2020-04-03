@@ -6,7 +6,7 @@ import { GpsPoint, gpsPointFromString, gpsPointToString } from '../common/types/
 import { Requirement } from '../requirements/requirement.entity';
 
 @Entity()
-export class Recipient extends BaseEntity {
+export class Client extends BaseEntity {
   @Column({ charset: 'utf8mb4', nullable: true })
   firstName?: string;
 
@@ -44,6 +44,9 @@ export class Recipient extends BaseEntity {
   @Column({ charset: 'utf8mb4', nullable: true })
   address: string;
 
+  @Column({ charset: 'utf8mb4', nullable: true })
+  region: string;
+
   @Column({
     type: 'varchar',
     nullable: true,
@@ -59,7 +62,7 @@ export class Recipient extends BaseEntity {
 
   @OneToMany(
     () => Requirement,
-    requirement => requirement.recipient,
+    requirement => requirement.client,
   )
   requirements: Requirement[];
 }

@@ -36,6 +36,10 @@ export class CreateHelperDto {
   @IsOptional()
   address?: string;
 
+  @IsString()
+  @IsOptional()
+  region?: string;
+
   @ValidateNested()
   @Type(() => GpsPoint)
   @IsOptional()

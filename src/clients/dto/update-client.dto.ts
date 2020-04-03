@@ -2,7 +2,7 @@ import { IsEmail, IsInt, IsOptional, IsPhoneNumber, IsString, ValidateNested } f
 import { Type } from 'class-transformer';
 import { GpsPoint } from '../../common/types/gps-point.type';
 
-export class UpdateRecipientDto {
+export class UpdateClientDto {
   @IsString()
   @IsOptional()
   firstName?: string;
@@ -26,6 +26,10 @@ export class UpdateRecipientDto {
   @IsString()
   @IsOptional()
   address?: string;
+
+  @IsString()
+  @IsOptional()
+  region?: string;
 
   @ValidateNested()
   @Type(() => GpsPoint)

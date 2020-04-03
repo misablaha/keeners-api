@@ -27,6 +27,10 @@ export class UpdateHelperDto {
   @IsOptional()
   address?: string;
 
+  @IsString()
+  @IsOptional()
+  region?: string;
+
   @ValidateNested()
   @Type(() => GpsPoint)
   @IsOptional()

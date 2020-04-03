@@ -1,5 +1,5 @@
 import { Controller, Delete, Param, Put } from '@nestjs/common';
-import { Crud } from '@nestjsx/crud';
+import { Crud, CrudController } from '@nestjsx/crud';
 import { Helper } from './helper.entity';
 import { HelpersService } from './helpers.service';
 import { CreateHelperDto } from './dto/create-helper.dto';
@@ -27,8 +27,8 @@ import { UpdateHelperDto } from './dto/update-helper.dto';
     },
   },
 })
-export class HelpersController {
-  constructor(private readonly service: HelpersService) {}
+export class HelpersController implements CrudController<Helper> {
+  constructor(public readonly service: HelpersService) {}
 
   @Put(':id/services/:sid')
   addService(@Param('id') hid: string, @Param('sid') sid: string): Promise<Helper> {

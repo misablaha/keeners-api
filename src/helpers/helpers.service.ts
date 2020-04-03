@@ -3,8 +3,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { CrudRequest } from '@nestjsx/crud';
-import { Helper } from './helper.entity';
 import { Service } from '../services/service.entity';
+import { Helper } from './helper.entity';
 import { UpdateHelperDto } from './dto/update-helper.dto';
 
 @Injectable()

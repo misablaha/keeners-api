@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { Crud } from '@nestjsx/crud';
+import { Crud, CrudController } from '@nestjsx/crud';
 import { SupervisorsService } from './supervisors.service';
 import { Supervisor } from './supervisor.entity';
 import { CreateSupervisorDto } from './dto/create-supervisor.dto';
@@ -20,6 +20,6 @@ import { UpdateSupervisorDto } from './dto/update-supervisor.dto';
     },
   },
 })
-export class SupervisorsController {
-  constructor(private readonly service: SupervisorsService) {}
+export class SupervisorsController implements CrudController<Supervisor> {
+  constructor(public readonly service: SupervisorsService) {}
 }

@@ -1,34 +1,36 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
-import { Service } from '../services/service.entity';
-import { BaseEntity } from '../common/entities/base.entity';
-import { Recipient } from '../recipients/recipient.entity';
-import { Helper } from '../helpers/helper.entity';
-import { GpsPoint, gpsPointFromString, gpsPointToString } from '../common/types/gps-point.type';
-import { Supervisor } from '../supervisors/supervisor.entity';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Expose } from 'class-transformer';
+import { BaseEntity } from '../common/entities/base.entity';
+import { GpsPoint, gpsPointFromString, gpsPointToString } from '../common/types/gps-point.type';
+import { Demand } from '../demands/demand.entity';
+import { Helper } from '../helpers/helper.entity';
+import { Client } from '../clients/client.entity';
+import { Supervisor } from '../supervisors/supervisor.entity';
+import { IsOptional, IsString } from 'class-validator';
 
 export enum RequirementStatus {
-  OPEN = 'open',
-  ASSIGN = 'assign',
+  NEW = 'new',
+  PROCESSING = 'processing',
   DONE = 'done',
-  CANCEL = 'cancel',
+  CANCELED = 'canceled',
 }
 
 @Entity()
 export class Requirement extends BaseEntity {
-  @ManyToOne(
-    () => Recipient,
-    recipient => recipient.requirements,
-  )
-  recipient: Recipient;
+  @Column('uuid')
+  clientId!: string;
 
-  @Expose()
-  get recipientId() {
-    return this.recipient?.id;
-  }
+  @ManyToOne(
+    () => Client,
+    client => client.requirements,
+  )
+  client: Client;
 
   @Column({ charset: 'utf8mb4', nullable: true })
   address: string;
+
+  @Column({ charset: 'utf8mb4', nullable: true })
+  region: string;
 
   @Column({
     type: 'varchar',
@@ -40,14 +42,12 @@ export class Requirement extends BaseEntity {
   })
   location: GpsPoint;
 
-  @ManyToMany(() => Service, { eager: true })
-  @JoinTable()
-  demands: Service[];
-
-  @Expose()
-  get demandIds() {
-    return this.demands.map(d => d.id);
-  }
+  @OneToMany(
+    () => Demand,
+    demand => demand.requirement,
+    { eager: true },
+  )
+  demands: Demand[];
 
   @Column({ type: 'text', charset: 'utf8mb4', nullable: true })
   note: string;
@@ -55,13 +55,14 @@ export class Requirement extends BaseEntity {
   @Column({ nullable: true })
   supplyDate: Date;
 
+  @Column('uuid')
+  supervisorId: string;
+
   @ManyToOne(() => Supervisor, { nullable: true })
   supervisor: Supervisor;
 
-  @Expose()
-  get supervisorId() {
-    return this.supervisor?.id;
-  }
+  @Column('uuid')
+  helperId: string;
 
   @ManyToOne(
     () => Helper,
@@ -70,15 +71,10 @@ export class Requirement extends BaseEntity {
   )
   helper?: Helper;
 
-  @Expose()
-  get helperId() {
-    return this.helper?.id;
-  }
-
   @Column({
     type: 'enum',
     enum: RequirementStatus,
-    default: RequirementStatus.OPEN,
+    default: RequirementStatus.NEW,
   })
   status: RequirementStatus;
 }

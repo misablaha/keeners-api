@@ -1,10 +1,10 @@
 import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany } from 'typeorm';
-import { Service } from '../services/service.entity';
+import { Expose } from 'class-transformer';
 import { BaseEntity } from '../common/entities/base.entity';
 import { formatPhoneNumber, PhoneNumberFormat } from '../common/utils/phone-number';
-import { Requirement } from '../requirements/requirement.entity';
 import { GpsPoint, gpsPointFromString, gpsPointToString } from '../common/types/gps-point.type';
-import { Expose } from 'class-transformer';
+import { Service } from '../services/service.entity';
+import { Requirement } from '../requirements/requirement.entity';
 
 @Entity()
 export class Helper extends BaseEntity {
@@ -39,6 +39,9 @@ export class Helper extends BaseEntity {
 
   @Column({ charset: 'utf8mb4', nullable: true })
   address: string;
+
+  @Column({ charset: 'utf8mb4', nullable: true })
+  region: string;
 
   @Column({
     type: 'varchar',

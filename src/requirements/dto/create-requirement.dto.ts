@@ -2,29 +2,29 @@ import { IsDate, IsEnum, IsOptional, IsString, IsUUID, ValidateNested } from 'cl
 import { Type } from 'class-transformer';
 import { GpsPoint } from '../../common/types/gps-point.type';
 import { RequirementStatus } from '../requirement.entity';
-import { CreateRecipientDto } from '../../recipients/dto/create-recipient.dto';
+import { CreateClientDto } from '../../clients/dto/create-client.dto';
 
 export class CreateRequirementDto {
   @IsUUID('4')
   @IsOptional()
-  recipientId?: string;
+  clientId?: string;
 
   @ValidateNested()
-  @Type(() => CreateRecipientDto)
-  recipient: CreateRecipientDto;
+  @Type(() => CreateClientDto)
+  client: CreateClientDto;
 
   @IsString()
   @IsOptional()
   address?: string;
 
+  @IsString()
+  @IsOptional()
+  region?: string;
+
   @ValidateNested()
   @Type(() => GpsPoint)
   @IsOptional()
   location?: GpsPoint;
-
-  @IsUUID('4', { each: true })
-  @IsOptional()
-  demandIds: string[] = [];
 
   @IsString()
   @IsOptional()

@@ -2,26 +2,26 @@ import { IsDate, IsEnum, IsOptional, IsString, IsUUID, ValidateNested } from 'cl
 import { Type } from 'class-transformer';
 import { GpsPoint } from '../../common/types/gps-point.type';
 import { RequirementStatus } from '../requirement.entity';
-import { UpdateRecipientDto } from '../../recipients/dto/update-recipient.dto';
+import { UpdateClientDto } from '../../clients/dto/update-client.dto';
 
 export class UpdateRequirementDto {
   @ValidateNested()
-  @Type(() => UpdateRecipientDto)
+  @Type(() => UpdateClientDto)
   @IsOptional()
-  recipient?: UpdateRecipientDto;
+  client?: UpdateClientDto;
 
   @IsString()
   @IsOptional()
   address?: string;
 
+  @IsString()
+  @IsOptional()
+  region?: string;
+
   @ValidateNested()
   @Type(() => GpsPoint)
   @IsOptional()
   location?: GpsPoint;
-
-  @IsUUID('4', { each: true })
-  @IsOptional()
-  demandIds: string[];
 
   @IsString()
   @IsOptional()

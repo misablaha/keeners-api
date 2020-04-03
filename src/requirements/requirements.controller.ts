@@ -3,7 +3,7 @@ import { CreateRequirementDto } from './dto/create-requirement.dto';
 import { Requirement } from './requirement.entity';
 import { RequirementsService } from './requirements.service';
 import { UpdateRequirementDto } from './dto/update-requirement.dto';
-import { Crud } from '@nestjsx/crud';
+import { Crud, CrudController } from '@nestjsx/crud';
 
 @Controller('api/requirements')
 @Crud({
@@ -24,7 +24,7 @@ import { Crud } from '@nestjsx/crud';
       helper: {
         eager: true,
       },
-      recipient: {
+      client: {
         eager: true,
       },
       supervisor: {
@@ -36,6 +36,6 @@ import { Crud } from '@nestjsx/crud';
     },
   },
 })
-export class RequirementsController {
-  constructor(private readonly service: RequirementsService) {}
+export class RequirementsController implements CrudController<Requirement> {
+  constructor(public readonly service: RequirementsService) {}
 }
