@@ -8,6 +8,9 @@ import { Requirement } from '../requirements/requirement.entity';
 
 @Entity()
 export class Helper extends BaseEntity {
+  @Column({ unique: true, nullable: true })
+  callSign: string;
+
   @Column({ charset: 'utf8mb4' })
   firstName: string;
 

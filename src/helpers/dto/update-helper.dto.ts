@@ -5,6 +5,10 @@ import { GpsPoint } from '../../common/types/gps-point.type';
 export class UpdateHelperDto {
   @IsString()
   @IsOptional()
+  callSign: string;
+
+  @IsString()
+  @IsOptional()
   firstName?: string;
 
   @IsString()

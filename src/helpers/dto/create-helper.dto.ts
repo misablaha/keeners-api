@@ -13,6 +13,10 @@ import { GpsPoint } from '../../common/types/gps-point.type';
 
 export class CreateHelperDto {
   @IsString()
+  @IsOptional()
+  callSign: string;
+
+  @IsString()
   @IsNotEmpty()
   firstName: string;
 
