@@ -16,6 +16,6 @@ export default (): Config => ({
     database: parse(dbUrl).pathname?.substr(1),
     autoLoadEntities: true,
     synchronize: true,
-    logging: ['query', 'error'],
+    logging: ['error'],
   },
 });

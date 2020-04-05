@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import { GpsPoint } from '../../common/types/gps-point.type';
 import { RequirementStatus } from '../requirement.entity';
 import { UpdateClientDto } from '../../clients/dto/update-client.dto';
+import { SyncDemandDto } from '../../demands/dto/sync-demand.dto';
 
 export class UpdateRequirementDto {
   @ValidateNested()
@@ -22,6 +23,11 @@ export class UpdateRequirementDto {
   @Type(() => GpsPoint)
   @IsOptional()
   location?: GpsPoint;
+
+  @ValidateNested()
+  @Type(() => SyncDemandDto)
+  @IsOptional()
+  demands: SyncDemandDto[];
 
   @IsString()
   @IsOptional()

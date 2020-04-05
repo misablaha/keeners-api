@@ -9,7 +9,8 @@ import { Requirement } from './requirement.entity';
 import { Client } from '../clients/client.entity';
 import { Supervisor } from '../supervisors/supervisor.entity';
 import { Helper } from '../helpers/helper.entity';
-import { Demand } from '../demands/demand.entity';
+import { DemandsService } from '../demands/demands.service';
+import { ClientsService } from '../clients/clients.service';
 
 @Injectable()
 export class RequirementsService extends TypeOrmCrudService<Requirement> {
@@ -22,39 +23,37 @@ export class RequirementsService extends TypeOrmCrudService<Requirement> {
     private readonly requirementRepository: Repository<Requirement>,
     @InjectRepository(Supervisor)
     private readonly supervisorRepository: Repository<Supervisor>,
+    private readonly demandsService: DemandsService,
+    private readonly clientsService: ClientsService,
   ) {
     super(requirementRepository);
   }
 
   async createOne(req: CrudRequest, dto: CreateRequirementDto): Promise<Requirement> {
-    const client = dto.clientId
-      ? await this.clientRepository.findOneOrFail(dto.clientId)
-      : this.clientRepository.create();
+    const client = await this.clientsService.updateOneOrCreate(dto.clientId, dto.client);
+    const supervisor = await this.supervisorRepository.findOne(dto.supervisorId);
+    const helper = dto.helperId ? await this.supervisorRepository.findOne(dto.helperId) : undefined;
 
-    if (dto.client) {
-      Object.assign(client, dto.client);
-      await this.clientRepository.save(client);
+    const result = await super.createOne(req, { ...dto, client, supervisor, helper });
+    if (dto.demands) {
+      result.demands = await this.demandsService.syncDemands(result.id, dto.demands);
     }
 
-    // const demands = await this.serviceRepository.findByIds(dto.demandIds);
-    const demands: Demand[] = [];
-    const supervisor = await this.supervisorRepository.findOneOrFail(dto.supervisorId);
-    const helper = 'helperId' in dto ? await this.helperRepository.findOneOrFail(dto.helperId) : undefined;
-    return super.createOne(req, { ...dto, client, demands, supervisor, helper });
+    return result;
   }
 
   async updateOne(req: CrudRequest, dto: UpdateRequirementDto): Promise<Requirement> {
+    const supervisor = await this.supervisorRepository.findOne(dto.supervisorId);
+    const helper = dto.helperId ? await this.supervisorRepository.findOne(dto.helperId) : undefined;
+
+    const result = await super.updateOne(req, { ...dto, supervisor, helper });
+    if (dto.demands) {
+      result.demands = await this.demandsService.syncDemands(result.id, dto.demands);
+    }
     if (dto.client) {
-      const requirement = await super.getOne(req);
-      Object.assign(requirement.client, dto.client);
-      await this.clientRepository.save(requirement.client);
+      result.client = await this.clientsService.updateOneOrCreate(result.clientId, dto.client);
     }
 
-    // const demands = 'demandIds' in dto ? await this.serviceRepository.findByIds(dto.demandIds) : undefined;
-    const demands: Demand[] = [];
-    const supervisor =
-      'supervisorId' in dto ? await this.supervisorRepository.findOneOrFail(dto.supervisorId) : undefined;
-    const helper = 'helperId' in dto ? await this.helperRepository.findOneOrFail(dto.helperId) : undefined;
-    return super.updateOne(req, { ...dto, demands, supervisor, helper });
+    return result;
   }
 }

@@ -33,6 +33,9 @@ import { Crud, CrudController } from '@nestjsx/crud';
       demands: {
         eager: true,
       },
+      'demands.service': {
+        eager: true,
+      },
     },
   },
 })

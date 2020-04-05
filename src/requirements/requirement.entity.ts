@@ -1,12 +1,10 @@
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { Expose } from 'class-transformer';
 import { BaseEntity } from '../common/entities/base.entity';
 import { GpsPoint, gpsPointFromString, gpsPointToString } from '../common/types/gps-point.type';
 import { Demand } from '../demands/demand.entity';
 import { Helper } from '../helpers/helper.entity';
 import { Client } from '../clients/client.entity';
 import { Supervisor } from '../supervisors/supervisor.entity';
-import { IsOptional, IsString } from 'class-validator';
 
 export enum RequirementStatus {
   NEW = 'new',
@@ -55,20 +53,16 @@ export class Requirement extends BaseEntity {
   @Column({ nullable: true })
   supplyDate: Date;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   supervisorId: string;
 
   @ManyToOne(() => Supervisor, { nullable: true })
   supervisor: Supervisor;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   helperId: string;
 
-  @ManyToOne(
-    () => Helper,
-    helper => helper.requirements,
-    { nullable: true },
-  )
+  @ManyToOne(() => Helper, { nullable: true })
   helper?: Helper;
 
   @Column({

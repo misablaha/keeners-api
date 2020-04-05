@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import { GpsPoint } from '../../common/types/gps-point.type';
 import { RequirementStatus } from '../requirement.entity';
 import { CreateClientDto } from '../../clients/dto/create-client.dto';
+import { SyncDemandDto } from '../../demands/dto/sync-demand.dto';
 
 export class CreateRequirementDto {
   @IsUUID('4')
@@ -25,6 +26,11 @@ export class CreateRequirementDto {
   @Type(() => GpsPoint)
   @IsOptional()
   location?: GpsPoint;
+
+  @ValidateNested()
+  @Type(() => SyncDemandDto)
+  @IsOptional()
+  demands: SyncDemandDto[];
 
   @IsString()
   @IsOptional()
