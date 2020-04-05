@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  keeners-api:
+    build:
+      context: .
+    ports:
+      - ${PORT}:80
+    environment:
+      PORT: 80
+      MYSQL: mysql://root:password@mysql:3306/keeners
+    depends_on:
+      - mysql
+    networks:
+      - proxy
+    labels:
+      - traefik.http.routers.keeners-api.priority=2
+      - traefik.http.routers.keeners-api.rule=PathPrefix(`/api`)
+
+  mysql:
+    image: mysql:5.7
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./init.sql:/data/application/init.sql
+#      - ./dbdata:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
