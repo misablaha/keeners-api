@@ -1,4 +1,4 @@
-import { IsDate, IsEnum, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { IsDate, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { GpsPoint } from '../../common/types/gps-point.type';
 import { RequirementStatus } from '../requirement.entity';
@@ -47,6 +47,10 @@ export class CreateRequirementDto {
   @IsUUID('4')
   @IsOptional()
   helperId?: string;
+
+  @IsNumber()
+  @IsOptional()
+  traveledDistance?: number;
 
   @IsEnum(RequirementStatus)
   @IsOptional()

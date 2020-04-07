@@ -65,6 +65,9 @@ export class Requirement extends BaseEntity {
   @ManyToOne(() => Helper, { nullable: true })
   helper?: Helper;
 
+  @Column({ type: 'float', default: 0 })
+  traveledDistance: number;
+
   @Column({
     type: 'enum',
     enum: RequirementStatus,
