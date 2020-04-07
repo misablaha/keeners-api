@@ -25,6 +25,8 @@ export class DemandsService extends TypeOrmCrudService<Demand> {
     }
 
     const newDemandsMap = keyBy(newDemands, 'id');
+    const oldDemandsMap = keyBy(oldDemands, 'id');
+
     oldDemands.forEach(d => {
       if (d.serviceId !== newDemandsMap[d.id].serviceId) {
         throw this.throwBadRequestException('It is not allowed to change service in the existing demand.');
@@ -38,11 +40,7 @@ export class DemandsService extends TypeOrmCrudService<Demand> {
     }
 
     // Filter new demands with id that have changed status
-    const toUpdate = differenceBy(
-      newDemands.filter(d => !!d.id),
-      oldDemands,
-      'status',
-    );
+    const toUpdate = newDemands.filter(d => d.id && d.status !== oldDemandsMap[d.id].status);
     await Promise.all(toUpdate.map(d => this.repository.update(d.id, d)));
 
     return this.repository.find({ requirementId });
