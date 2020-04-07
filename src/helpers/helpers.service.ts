@@ -5,6 +5,7 @@ import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { CrudRequest } from '@nestjsx/crud';
 import { Service } from '../services/service.entity';
 import { Helper } from './helper.entity';
+import { CreateHelperDto } from './dto/create-helper.dto';
 import { UpdateHelperDto } from './dto/update-helper.dto';
 
 @Injectable()
@@ -16,6 +17,15 @@ export class HelpersService extends TypeOrmCrudService<Helper> {
     private readonly serviceRepository: Repository<Service>,
   ) {
     super(helperRepository);
+  }
+
+  async createOne(req: CrudRequest, dto: CreateHelperDto): Promise<Helper> {
+    const helper = await super.createOne(req, dto);
+    if (dto.provideIds) {
+      helper.provide = await this.serviceRepository.findByIds(dto.provideIds);
+      await this.helperRepository.save(helper);
+    }
+    return helper;
   }
 
   async updateOne(req: CrudRequest, dto: UpdateHelperDto): Promise<Helper> {
