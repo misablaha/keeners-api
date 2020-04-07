@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { TypeOrmCrudService } from '../core/crud.service';
 import { Service } from './service.entity';
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 
 @Injectable()
 export class ServicesService extends TypeOrmCrudService<Service> {

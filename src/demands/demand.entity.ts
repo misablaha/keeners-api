@@ -18,6 +18,7 @@ export class Demand extends BaseEntity {
   @ManyToOne(
     () => Requirement,
     requirement => requirement.demands,
+    { cascade: true, onDelete: 'CASCADE' },
   )
   public requirement!: Requirement;
 

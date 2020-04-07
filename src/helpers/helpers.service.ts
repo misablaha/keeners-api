@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+import { Repository } from 'typeorm';
 import { CrudRequest } from '@nestjsx/crud';
+import { TypeOrmCrudService } from '../core/crud.service';
 import { Service } from '../services/service.entity';
 import { Helper } from './helper.entity';
 import { CreateHelperDto } from './dto/create-helper.dto';

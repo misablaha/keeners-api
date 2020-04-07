@@ -2,8 +2,8 @@ import { differenceBy, keyBy } from 'lodash';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { TypeOrmCrudService } from '../core/crud.service';
 import { Demand } from './demand.entity';
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { SyncDemandDto } from './dto/sync-demand.dto';
 
 @Injectable()
@@ -27,20 +27,18 @@ export class DemandsService extends TypeOrmCrudService<Demand> {
     const newDemandsMap = keyBy(newDemands, 'id');
     const oldDemandsMap = keyBy(oldDemands, 'id');
 
+    // New demands without id will be inserted
+    const toInsert = newDemands.filter(d => !d.id);
+    // New demands with id having changed status will be updated
+    const toUpdate = newDemands.filter(d => d.id && d.status !== oldDemandsMap[d.id].status);
+
     oldDemands.forEach(d => {
       if (d.serviceId !== newDemandsMap[d.id].serviceId) {
         throw this.throwBadRequestException('It is not allowed to change service in the existing demand.');
       }
     });
 
-    // Filter new demands without id
-    const toInsert = newDemands.filter(d => !d.id);
-    if (toInsert.length > 0) {
-      await this.repository.insert(toInsert);
-    }
-
-    // Filter new demands with id that have changed status
-    const toUpdate = newDemands.filter(d => d.id && d.status !== oldDemandsMap[d.id].status);
+    await Promise.all(toInsert.map(d => this.repository.insert(d)));
     await Promise.all(toUpdate.map(d => this.repository.update(d.id, d)));
 
     return this.repository.find({ requirementId });
