@@ -15,6 +15,10 @@ export class CreateClientDto {
   @IsOptional()
   yearOfBirth?: number;
 
+  @IsString()
+  @IsOptional()
+  disease?: string;
+
   @IsEmail()
   @IsOptional()
   email?: string;

@@ -1,5 +1,6 @@
 import { parse } from 'url';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+require('dotenv').config();
 
 export interface Config {
   port: number;

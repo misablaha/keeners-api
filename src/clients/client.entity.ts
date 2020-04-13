@@ -27,6 +27,9 @@ export class Client extends BaseEntity {
   }
 
   @Column({ charset: 'utf8mb4', nullable: true })
+  disease?: string;
+
+  @Column({ charset: 'utf8mb4', nullable: true })
   @Index({ unique: true })
   email?: string;
 

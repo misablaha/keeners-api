@@ -13,6 +13,10 @@ export class UpdateRequirementDto {
 
   @IsString()
   @IsOptional()
+  disease?: string;
+
+  @IsString()
+  @IsOptional()
   address?: string;
 
   @IsString()

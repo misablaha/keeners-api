@@ -25,6 +25,9 @@ export class Requirement extends BaseEntity {
   client: Client;
 
   @Column({ charset: 'utf8mb4', nullable: true })
+  disease?: string;
+
+  @Column({ charset: 'utf8mb4', nullable: true })
   address: string;
 
   @Column({ charset: 'utf8mb4', nullable: true })

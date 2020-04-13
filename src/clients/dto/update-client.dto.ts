@@ -15,6 +15,10 @@ export class UpdateClientDto {
   @IsOptional()
   yearOfBirth?: number;
 
+  @IsString()
+  @IsOptional()
+  disease?: string;
+
   @IsEmail()
   @IsOptional()
   email?: string;
