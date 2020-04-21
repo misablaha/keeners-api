@@ -18,10 +18,7 @@ export class Requirement extends BaseEntity {
   @Column('uuid')
   clientId!: string;
 
-  @ManyToOne(
-    () => Client,
-    client => client.requirements,
-  )
+  @ManyToOne(() => Client, client => client.requirements)
   client: Client;
 
   @Column({ charset: 'utf8mb4', nullable: true })
@@ -43,11 +40,7 @@ export class Requirement extends BaseEntity {
   })
   location: GpsPoint;
 
-  @OneToMany(
-    () => Demand,
-    demand => demand.requirement,
-    { eager: true },
-  )
+  @OneToMany(() => Demand, demand => demand.requirement, { eager: true })
   demands: Demand[];
 
   @Column({ type: 'text', charset: 'utf8mb4', nullable: true })
@@ -68,7 +61,7 @@ export class Requirement extends BaseEntity {
   @ManyToOne(() => Helper, { nullable: true })
   helper?: Helper;
 
-  @Column({ type: 'float', default: 0 })
+  @Column({ type: 'float', default: 0, nullable: true })
   traveledDistance: number;
 
   @Column({
